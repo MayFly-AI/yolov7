@@ -76,7 +76,7 @@ def detect(save_img=False):
             arr = torch.from_dlpack(frm['image']).cpu().numpy()
         else:
             arr = np.from_dlpack(frm['image']).copy()
-        arr = arr[:,:,:3]
+        arr = cv2.cvtColor(arr[:,:,:3], cv2.COLOR_RGB2BGR)
         im0s = np.copy(arr)
 
         # Letterbox
