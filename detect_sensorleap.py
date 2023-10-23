@@ -16,7 +16,7 @@ from utils.plots import plot_one_box
 from utils.torch_utils import select_device, load_classifier, time_synchronized, TracedModel
 
 from utils.datasets import letterbox
-from mayfly.videocapture import VideoCapture
+from mayfly.sensorcapture import SensorCapture
 
 def detect(save_img=False):
     weights, view_img, save_txt, imgsz, trace = opt.weights, opt.view_img, opt.save_txt, opt.img_size, not opt.no_trace
@@ -65,13 +65,15 @@ def detect(save_img=False):
     vid_cap = None
     use_cuda = True
     config = ''
-    cap = VideoCapture(list(range(64)), config)
+    cap = SensorCapture(list(range(64)), config)
     path = './'
     frame_idx = -1
     while True:
         frames = cap.read()
+        if frames['type'] != 'camera':
+            continue
         frame_idx += 1
-        frm = frames[0] # It may have more than 1 frame if sync cameras or ToF. We assume 1 frame
+        frm = frames['frames'][0] # It may have more than 1 frame if sync cameras or ToF. We assume 1 frame
         if use_cuda:
             arr = torch.from_dlpack(frm['image']).cpu().numpy()
         else:
