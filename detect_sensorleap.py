@@ -69,11 +69,11 @@ def detect(save_img=False):
     path = './'
     frame_idx = -1
     while True:
-        frames = cap.read()
-        if frames['type'] != 'camera':
+        capture = cap.read()
+        if capture['type'] != 'camera':
             continue
         frame_idx += 1
-        frm = frames['frames'][0] # It may have more than 1 frame if sync cameras or ToF. We assume 1 frame
+        frm = capture['frames'][0] # It may have more than 1 frame if sync cameras or ToF. We assume 1 frame
         if use_cuda:
             arr = torch.from_dlpack(frm['image']).cpu().numpy()
         else:
